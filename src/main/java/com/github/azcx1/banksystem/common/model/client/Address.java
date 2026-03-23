@@ -1,4 +1,4 @@
-package com.github.azcx1.banksystem.common.model;
+package com.github.azcx1.banksystem.common.model.client;
 
 import java.util.regex.Pattern;
 

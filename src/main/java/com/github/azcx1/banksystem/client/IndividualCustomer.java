@@ -1,7 +1,7 @@
 package com.github.azcx1.banksystem.client;
 
-import com.github.azcx1.banksystem.common.model.Address;
-import com.github.azcx1.banksystem.common.model.Pesel;
+import com.github.azcx1.banksystem.common.model.client.Address;
+import com.github.azcx1.banksystem.common.model.client.Pesel;
 
 public class IndividualCustomer extends Client {
     private String firstName;

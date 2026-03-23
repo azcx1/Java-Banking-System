@@ -1,8 +1,8 @@
 package com.github.azcx1.banksystem.client;
 
-import com.github.azcx1.banksystem.common.model.Address;
-import com.github.azcx1.banksystem.common.model.EmailAddress;
-import com.github.azcx1.banksystem.common.model.PhoneNumber;
+import com.github.azcx1.banksystem.common.model.client.Address;
+import com.github.azcx1.banksystem.common.model.client.EmailAddress;
+import com.github.azcx1.banksystem.common.model.client.PhoneNumber;
 
 import java.util.Objects;
 import java.util.UUID;
