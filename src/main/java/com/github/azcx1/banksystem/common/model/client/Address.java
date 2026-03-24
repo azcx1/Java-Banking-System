@@ -19,10 +19,7 @@ public class Address {
         setFlatNumber(flatNumber);
     }
     public Address( String city, String street, String postalCode, String buildingNumber ){
-        setCity(city);
-        setStreet(street);
-        setPostalCode(postalCode);
-        setBuildingNumber(buildingNumber);
+        this(city, street, postalCode, buildingNumber, null);
     }
 
     public void setCity( String city ) {
