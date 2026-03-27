@@ -29,10 +29,9 @@ public abstract class Person {
     }
 
     public void setLastName(String name) {
-        name = name.trim();
-        if ( name.isBlank() )
+        if ( name == null || name.trim().isBlank() )
             throw new IllegalArgumentException("name can not be empty");
-        this.lastName = name;
+        this.lastName = name.trim();
     }
     public String getLastName() {
         return this.lastName;

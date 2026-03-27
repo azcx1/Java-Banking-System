@@ -1,6 +1,5 @@
 package com.github.azcx1.banksystem.account;
 
-import com.github.azcx1.banksystem.client.Client;
 import com.github.azcx1.banksystem.common.model.account.AccountNumber;
 import com.github.azcx1.banksystem.utils.AccountNumberGenerator;
 
@@ -12,11 +11,11 @@ public abstract class BankAccount {
     private final AccountNumber accountNumber;
     private BigDecimal accountBalance = BigDecimal.ZERO;
     private final Currency accountCurrency;
-    private final Client owner;
-    private List<Client> coOwners;
+    private final OClient owner;
+    private List<OClient> coOwners;
     private final LocalDateTime creationDate;
 
-    public BankAccount(Client owner, Currency currency){
+    public BankAccount(OClient owner, Currency currency){
         accountNumber = AccountNumberGenerator.generateNext();
         this.owner = owner;
         this.creationDate = LocalDateTime.now();
@@ -49,11 +48,11 @@ public abstract class BankAccount {
         return this.accountCurrency;
     }
 
-    public Client getOwner(){
+    public OClient getOwner(){
         return this.owner;
     }
 
-    public void addCoOwner(Client person) {
+    public void addCoOwner(OClient person) {
         if ( person == null )
             throw new IllegalArgumentException("Object person can not be null");
         if ( this.coOwners == null )
@@ -72,7 +71,7 @@ public abstract class BankAccount {
             throw new IllegalArgumentException("Co owner not found");
     }
 
-    public List<Client> getCoOwners(){
+    public List<OClient> getCoOwners(){
         if ( this.coOwners == null )
             return Collections.emptyList();
         return Collections.unmodifiableList(this.coOwners);

@@ -1,49 +1,30 @@
 package com.github.azcx1.banksystem.client;
 
-import com.github.azcx1.banksystem.common.model.client.Address;
 import com.github.azcx1.banksystem.common.model.client.Pesel;
+import com.github.azcx1.person.Person;
 
-public class IndividualCustomer extends Client {
-    private String firstName;
-    private String lastName;
-    private final Pesel clientPesel;
+import java.util.UUID;
 
-    public IndividualCustomer
-            ( String firstName, String lastName, String peselNumber, String email, String phoneNumber, String city,
-              String street, String postalCode, String buildingNumber, String flatNumber) {
-        super(email, phoneNumber, new Address(city, street, postalCode, buildingNumber, flatNumber ));
+public class IndividualCustomer
+        extends Person
+        implements  Client {
 
-        setFirstName(firstName);
-        setLastName(lastName);
+    private final UUID id;
+    private ContactDetails contactDetails;
 
-        this.clientPesel = new Pesel(peselNumber);
-    }
-    public IndividualCustomer
-            ( String firstName, String lastName, String peselNumber, String email, String phoneNumber, String city,
-              String street, String postalCode, String buildingNumber) {
-
-        this(firstName, lastName, peselNumber, email, phoneNumber, city, street, postalCode, buildingNumber, null);
+    public IndividualCustomer(Pesel pesel, String firstName, String lastName, ContactDetails contactDetails){
+        super(pesel, firstName, lastName);
+        this.id = UUID.randomUUID();
+        this.contactDetails = contactDetails;
     }
 
-    public void setFirstName(String name) {
-        if ( name == null || name.isBlank() )
-            throw new IllegalArgumentException("First name can not be empty");
-        this.firstName = name;
-    }
-    public String getFirstName() {
-        return this.firstName;
-    }
 
-    public void setLastName(String name) {
-        if ( name == null || name.isBlank() )
-            throw new IllegalArgumentException("Last name can not be empty");
-        this.lastName = name;
+    @Override
+    public UUID getId(){
+        return id;
     }
-    public String getLastName() {
-        return this.lastName;
-    }
-
-    public Pesel getClientPesel(){
-        return this.clientPesel;
+    @Override
+    public ContactDetails getContactDetails(){
+        return contactDetails;
     }
 }
