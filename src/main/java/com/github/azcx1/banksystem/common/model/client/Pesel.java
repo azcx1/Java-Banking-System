@@ -24,7 +24,7 @@ public record Pesel(String peselNumber) {
         try {
             calculateBirthDate(peselNumber);
         } catch ( DateTimeException | IllegalArgumentException e ) {
-            throw new IllegalStateException("Invalid birth date encoded is pesel", e);
+            throw new IllegalArgumentException("Invalid birth date encoded is pesel", e);
         }
     }
 
@@ -52,7 +52,7 @@ public record Pesel(String peselNumber) {
             year += 1800;
             month -= 80;
         } else {
-            throw new IllegalStateException("Invalid month encoded in PESEL");
+            throw new IllegalArgumentException("Invalid month encoded in PESEL");
         }
 
         return LocalDate.of(year, month, day);
@@ -74,4 +74,8 @@ public record Pesel(String peselNumber) {
         return calculatedControlDigit == actualControlDigit;
     }
 
+    @Override
+    public String toString() {
+        return this.peselNumber;
+    }
 }
