@@ -24,10 +24,12 @@ public record Regon(String regon) {
         int[] weights = (length == 9) ? WEIGHTS_9 : WEIGHTS_14;
 
         int sum = 0;
-        for(int i = 0; i < weights.length - 1; i++) {
+        for(int i = 0; i < weights.length; i++) {
             sum += Character.getNumericValue(regon.charAt(i)) * weights[i];
         }
-        int calculatedControlDigit = (sum % 11) % 10;
+        int calculatedControlDigit = sum % 11;
+        if (calculatedControlDigit == 10)
+            calculatedControlDigit = 0;
         int actualControlDigit = Character.getNumericValue(regon.charAt(length - 1));
 
         return calculatedControlDigit == actualControlDigit;

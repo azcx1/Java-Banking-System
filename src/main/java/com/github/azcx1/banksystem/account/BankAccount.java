@@ -34,6 +34,9 @@ public abstract class BankAccount {
             throw new IllegalArgumentException("Deposit value can not be equal/lower than 0");
         this.accountBalance = this.accountBalance.add(amount);
     }
+    public void deposit(double amount){
+        deposit(BigDecimal.valueOf(amount));
+    }
 
     public void withdraw(BigDecimal amount) {
         if (amount.compareTo(BigDecimal.ZERO) <= 0)
@@ -41,6 +44,9 @@ public abstract class BankAccount {
         if (this.accountBalance.compareTo(amount) < 0)
             throw new IllegalArgumentException("Insufficient funds");
         this.accountBalance = this.accountBalance.subtract(amount);
+    }
+    public void withdraw(double amount){
+        withdraw(BigDecimal.valueOf(amount));
     }
 
     public BigDecimal getAccountBalance(){
