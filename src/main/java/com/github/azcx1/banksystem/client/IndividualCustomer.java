@@ -10,7 +10,7 @@ public class IndividualCustomer
         implements  Client {
 
     private final UUID id;
-    private ContactDetails contactDetails;
+    private final ContactDetails contactDetails;
 
     public IndividualCustomer(Pesel pesel, String firstName, String lastName, ContactDetails contactDetails){
         super(pesel, firstName, lastName);

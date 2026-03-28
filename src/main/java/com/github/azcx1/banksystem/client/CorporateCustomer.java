@@ -7,7 +7,7 @@ import java.util.UUID;
 
 public class CorporateCustomer implements Client{
     private final UUID id;
-    private ContactDetails contactDetails;
+    private final ContactDetails contactDetails;
 
     private String companyName;
     private final Nip nip;

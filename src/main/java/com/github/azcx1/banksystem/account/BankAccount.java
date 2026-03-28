@@ -1,5 +1,6 @@
 package com.github.azcx1.banksystem.account;
 
+import com.github.azcx1.banksystem.client.Client;
 import com.github.azcx1.banksystem.common.model.account.AccountNumber;
 import com.github.azcx1.banksystem.utils.AccountNumberGenerator;
 
@@ -8,16 +9,22 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 public abstract class BankAccount {
+
     private final AccountNumber accountNumber;
     private BigDecimal accountBalance = BigDecimal.ZERO;
     private final Currency accountCurrency;
-    private final OClient owner;
-    private List<OClient> coOwners;
+
+    private final Client owner;
+    private final List<Client> coOwners;
+
     private final LocalDateTime creationDate;
 
-    public BankAccount(OClient owner, Currency currency){
+    public BankAccount(Client owner, Currency currency){
+        if ( owner == null )
+            throw new IllegalArgumentException("Owner can not be set to null");
         accountNumber = AccountNumberGenerator.generateNext();
         this.owner = owner;
+        this.coOwners =  new ArrayList<>();
         this.creationDate = LocalDateTime.now();
         this.accountCurrency = currency != null ? currency : Currency.getInstance("PLN");
     }
@@ -48,16 +55,21 @@ public abstract class BankAccount {
         return this.accountCurrency;
     }
 
-    public OClient getOwner(){
+    public Client getOwner(){
         return this.owner;
     }
 
-    public void addCoOwner(OClient person) {
-        if ( person == null )
+    public void addCoOwner(Client client) {
+        if ( client == null )
             throw new IllegalArgumentException("Object person can not be null");
-        if ( this.coOwners == null )
-            this.coOwners = new ArrayList<>();
-        this.coOwners.add(person);
+
+        if (client.equals(this.owner))
+            throw new IllegalArgumentException("Main owner can not be add as co-owner");
+
+        if (this.coOwners != null && this.coOwners.contains(client))
+            throw new IllegalArgumentException("This person is already a co-owner");
+
+        this.coOwners.add(client);
     }
 
     public void removeCoOwner(UUID id){
@@ -71,7 +83,7 @@ public abstract class BankAccount {
             throw new IllegalArgumentException("Co owner not found");
     }
 
-    public List<OClient> getCoOwners(){
+    public List<Client> getCoOwners(){
         if ( this.coOwners == null )
             return Collections.emptyList();
         return Collections.unmodifiableList(this.coOwners);
