@@ -11,4 +11,5 @@ public interface Client {
     ContactDetails getContactDetails();
     void addBankAccount(AccountNumber number, BankAccount account);
     Map<AccountNumber, BankAccount> getBankAccounts();
+    String getDisplayName();
 }

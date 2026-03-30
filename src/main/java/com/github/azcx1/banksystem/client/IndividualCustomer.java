@@ -47,4 +47,9 @@ public class IndividualCustomer
     public Map<AccountNumber, BankAccount> getBankAccounts() {
         return Collections.unmodifiableMap(bankAccounts);
     }
+
+    @Override
+    public String getDisplayName() {
+        return String.format("%s %s", getFirstName(), getLastName());
+    }
 }

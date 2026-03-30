@@ -85,4 +85,8 @@ public class CorporateCustomer implements Client{
     public Map<AccountNumber, BankAccount> getBankAccounts() {
         return Collections.unmodifiableMap(bankAccounts);
     }
+    @Override
+    public String getDisplayName() {
+        return String.format("%s", getCompanyName());
+    }
 }

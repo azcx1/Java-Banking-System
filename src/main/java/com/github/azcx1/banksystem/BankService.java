@@ -1,6 +1,7 @@
 package com.github.azcx1.banksystem;
 
 import com.github.azcx1.banksystem.account.BankAccount;
+import com.github.azcx1.banksystem.account.SavingsAccount;
 import com.github.azcx1.banksystem.account.StandardAccount;
 import com.github.azcx1.banksystem.client.Client;
 import com.github.azcx1.banksystem.common.model.account.AccountNumber;
@@ -56,6 +57,21 @@ public class BankService {
         BankAccount account = new StandardAccount(
                 owner,
                 Currency.getInstance(currencyCode)
+        );
+        accountRepository.save(account);
+        owner.addBankAccount(account.getAccountNumber(), account);
+        return account;
+    }
+
+    public BankAccount openSavingsAccount(Client owner, String currencyCode) {
+        if ( currencyCode == null || currencyCode.trim().isBlank())
+            throw new IllegalArgumentException("Currency Symbol can not be empty");
+        currencyCode = currencyCode.trim();
+
+        BankAccount account = new SavingsAccount(
+                owner,
+                Currency.getInstance(currencyCode),
+                BigDecimal.valueOf(0.05)
         );
         accountRepository.save(account);
         owner.addBankAccount(account.getAccountNumber(), account);
