@@ -53,6 +53,7 @@ public class BankConsoleApp {
         switch (choice){
             case "1" -> handleClientSelection();
             case "2" -> chooseClientType();
+            case "3" -> System.exit(0);
             default -> System.err.println("Incorrect number");
         }
     }
@@ -193,6 +194,46 @@ public class BankConsoleApp {
     }
 
     private void bankAccountMenu(){
+        System.out.println("\n=-=-= Account -0-0-0\n");
+        System.out.println("Account number: " + this.currentBankAccount.getAccountNumber());
+        System.out.println("balance: " + this.currentBankAccount.getAccountBalance() + " " + this.currentBankAccount.getAccountCurrency());
+        System.out.println("\n=-=-= Menu -0-0-0\n");
+        System.out.println("1. Deposit");
+        System.out.println("2. Withdraw");
+        System.out.println("3. Transfer");
+        System.out.println("4. Exit");
 
+        String choice = scanner.nextLine();
+
+        switch (choice) {
+            case "1" -> depositMenu();
+            case "2" -> withdrawMenu();
+            case "3" -> transferMenu();
+            case "4" -> {
+                this.currentBankAccount = null;
+                return;
+            }
+        }
+    }
+
+    private void depositMenu() {
+        System.out.println("\n=-=-= Deposit -0-0-0\n");
+        System.out.print("amount: ");
+        double amount = Double.parseDouble(scanner.nextLine());
+        currentBankAccount.deposit(amount);
+    }
+    private void withdrawMenu() {
+        System.out.println("\n=-=-= Withdraw -0-0-0\n");
+        System.out.print("amount: ");
+        double amount = Double.parseDouble(scanner.nextLine());
+        currentBankAccount.withdraw(amount);
+    }
+    private void transferMenu() {
+        System.out.println("\n=-=-= Transfer -0-0-0\n");
+        System.out.println("Transfer to(account number): ");
+        AccountNumber transferTo = new AccountNumber(scanner.nextLine());
+        System.out.print("amount: ");
+        double amount = Double.parseDouble(scanner.nextLine());
+        bankService.transfer(currentBankAccount.getAccountNumber(), transferTo, amount);
     }
 }

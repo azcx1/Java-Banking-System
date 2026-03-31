@@ -33,7 +33,7 @@ public class BankService {
         accountRepository.save(sender);
         accountRepository.save(receiver);
     }
-    public void transfet(AccountNumber from, AccountNumber to, double amount){
+    public void transfer(AccountNumber from, AccountNumber to, double amount){
         transfer(from, to, BigDecimal.valueOf(amount));
     }
 
