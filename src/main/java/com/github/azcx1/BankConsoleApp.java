@@ -1,41 +1,40 @@
 package com.github.azcx1;
 
-import com.github.azcx1.AppUtils.BankAccountServices;
+import com.github.azcx1.AppUtils.AccountSummaryDTO;
 import com.github.azcx1.AppUtils.ClientService;
 import com.github.azcx1.AppUtils.Exceptions.EmptyBankAccountsListException;
 import com.github.azcx1.AppUtils.Exceptions.EmptyClientListException;
-import com.github.azcx1.banksystem.BankService;
+import com.github.azcx1.banksystem.BankController;
 import com.github.azcx1.banksystem.account.BankAccount;
+import com.github.azcx1.banksystem.account.SingleTransaction;
 import com.github.azcx1.banksystem.client.Client;
-import com.github.azcx1.banksystem.common.model.account.AccountNumber;
 
-import java.util.*;
+import java.util.List;
+import java.util.Scanner;
 
 public class BankConsoleApp {
     public final Scanner scanner = new Scanner(System.in);
-    private final BankService bankService = new BankService();
-    private final ClientService clientService = new ClientService(scanner);
-    private final BankAccountServices bankAccountServices = new BankAccountServices(scanner);
 
-    private Client currentCLient = null;
-    private BankAccount currentBankAccount = null;
+    BankController controller;
+    ClientService clientService;
 
-    private final List<Client> clients = new ArrayList<>();
-
+    public BankConsoleApp() {
+        this.controller = new BankController(scanner);
+        this.clientService = new ClientService(scanner);
+    }
     public void start() {
-        while (true) {
-            try{
-                if (currentCLient == null)
+        while(true) {
+            try {
+                if ( controller.getCurrentClient() == null )
                     showMainMenu();
-                if (currentBankAccount == null)
+                if ( controller.getCurrentBankAccount() == null)
                     clientMenu();
                 else
                     bankAccountMenu();
-            } catch (EmptyClientListException e) {
-                System.err.println("\n[!] " + e.getMessage());
-            } catch (EmptyBankAccountsListException e){
+
+            } catch ( EmptyClientListException e) {
                 System.err.println("[!] " + e.getMessage());
-            } catch (Exception e){
+            } catch (Exception e) {
                 System.err.println("\n[!] Unexpected error: " + e.getMessage());
             }
         }
@@ -50,42 +49,46 @@ public class BankConsoleApp {
 
         String choice = scanner.nextLine();
 
-        switch (choice){
-            case "1" -> handleClientSelection();
+        switch (choice) {
+            case "1" -> clientSelectionMenu();
             case "2" -> chooseClientType();
-            case "3" -> System.exit(0);
+            case "3" -> System.exit(1);
             default -> System.err.println("Incorrect number");
         }
     }
 
-    private void handleClientSelection() {
+    private void clientSelectionMenu() {
+        List<Client> clients = controller.getClients();
+
         if ( clients == null || clients.isEmpty() )
             throw new EmptyClientListException("List is empty. Add a client first.");
 
         System.out.println("\n=-=-= Select client -0-0-0\n");
-        for( int i = 0; i < clients.size(); i++ ) {
+
+        for (int i = 0; i < clients.size(); i++) {
             System.out.println((i+1) + ". " + clients.get(i).getDisplayName());
         }
         int lastOption = clients.size() + 1;
         System.out.println(lastOption + ". Back to main menu");
-
         System.out.print("\nChoice: ");
-        try{
+
+        try {
             int choice = Integer.parseInt(scanner.nextLine());
 
             if ( choice == lastOption )
                 return;
-            if ( choice > 0 && choice <= clients.size() ) {
-                this.currentCLient = clients.get(choice - 1);
+            if( choice > 0 && choice <= clients.size() ) {
+                controller.setCurrentClient(clients.get(choice-1));
                 clientMenu();
             } else {
                 System.err.println("Invalid number");
             }
-        } catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
             System.err.println("Please enter a valid number");
         }
     }
-    private void chooseClientType(){
+
+    private void chooseClientType() {
         System.out.println("\n=-=-= Choose client type -0-0-0\n");
         System.out.println("1. Individual customer");
         System.out.println("2. Corporative customer");
@@ -95,29 +98,18 @@ public class BankConsoleApp {
         String choice = scanner.nextLine();
 
         switch (choice) {
-            case "1" -> createIndividualCustomer();
-            case "2" -> createCorporateCustomer();
+            case "1" -> controller.addClient( clientService.createIndividualCustomer() );
+            case "2" -> controller.addClient( clientService.createCorporateCustomer() );
             case "3" -> {return;}
             default -> System.err.println("Incorrect number");
         }
     }
 
-    private void createIndividualCustomer(){
-        clients.add(
-                clientService.createIndividualCustomer()
-        );
-    }
-    private void createCorporateCustomer(){
-        clients.add(
-                clientService.createCorporateCustomer()
-        );
-    }
-
     private void clientMenu() {
-        if (currentCLient == null )
+        if ( controller.getCurrentClient() == null )
             return;
         System.out.println("\n=-=-= Client menu -0-0-0\n");
-        System.out.println("Hello, " + currentCLient.getDisplayName());
+        System.out.println("Hello, " + controller.getCurrentClientName());
         System.out.println("1. Choose bank account");
         System.out.println("2. Create bank account");
         System.out.println("3. Logout");
@@ -125,31 +117,29 @@ public class BankConsoleApp {
         String choice = scanner.nextLine();
 
         switch (choice) {
-            case "1" -> handleBankAccountSelection();
+            case "1" -> bankAccountSelectionMenu();
             case "2" -> chooseBankAccountType();
             case "3" -> {
-                this.currentCLient = null;
+                controller.setCurrentClient(null);
                 return;
             }
             default -> System.err.println("Incorrect number");
         }
     }
 
-    private void handleBankAccountSelection(){
-        Map<AccountNumber, BankAccount> clientBankAccountsMap = currentCLient.getBankAccounts();
-        if (clientBankAccountsMap == null || clientBankAccountsMap.isEmpty())
+    private void bankAccountSelectionMenu() {
+        List<BankAccount> clientBankAccounts = controller.getClientBankAccountsToList();
+        if ( clientBankAccounts.isEmpty() )
             throw new EmptyBankAccountsListException("List is empty. Create bank account first.");
 
         System.out.println("\n=-=-= Select bank account -0-0-0\n");
 
-        List<BankAccount> clientBankAccounts = new ArrayList<>(clientBankAccountsMap.values());
-
-        for (int i = 0; i < clientBankAccounts.size(); i++) {
+        int size = clientBankAccounts.size();
+        for (int i = 0; i < size; i++) {
             BankAccount account = clientBankAccounts.get(i);
-            System.out.println((i+1) + ". " + account.getAccountNumber()
-                    + " | " + account.getAccountBalance() + " " + account.getAccountCurrency());
+            System.out.println( (i+1) + ". " + account.getAccountNumber()
+            + " | " + account.getAccountBalance() + " " + account.getAccountCurrency());
         }
-
         int lastOption = clientBankAccounts.size() + 1;
         System.out.println(lastOption + ". Back to menu");
 
@@ -159,16 +149,17 @@ public class BankConsoleApp {
             if( choice == lastOption )
                 return;
             if( choice > 0 && choice <= clientBankAccounts.size() ){
-                this.currentBankAccount = clientBankAccounts.get(choice-1);
+                controller.setCurrentBankAccount(clientBankAccounts.get(choice - 1));
                 bankAccountMenu();
             }else {
                 System.err.println("Invalid number");
             }
-        } catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
             System.err.println("Please enter a valid number");
         }
     }
-    private void chooseBankAccountType(){
+
+    private void chooseBankAccountType() {
         System.out.println("\n=-=-= Choose bank account type -0-0-0\n");
         System.out.println("1. Standard account");
         System.out.println("2. Savings account");
@@ -178,30 +169,24 @@ public class BankConsoleApp {
         String choice = scanner.nextLine();
 
         switch (choice) {
-            case "1" -> createStandardAccount();
-            case "2" -> createSavingsAccount();
+            case "1" -> controller.createStandardAccount();
+            case "2" -> controller.createSavingsAccount();
             case "3" -> {return;}
             default -> System.err.println("Incorrect number");
         }
     }
-    private void createStandardAccount(){
-        String currency = bankAccountServices.chooseAccountCurrency();
-        bankService.openStandardAccount(this.currentCLient, currency);
-    }
-    private void createSavingsAccount(){
-        String currency = bankAccountServices.chooseAccountCurrency();
-        bankService.openSavingsAccount(this.currentCLient, currency);
-    }
 
-    private void bankAccountMenu(){
+    private void bankAccountMenu() {
+        AccountSummaryDTO account = controller.getCurrentAccountSummary();
         System.out.println("\n=-=-= Account -0-0-0\n");
-        System.out.println("Account number: " + this.currentBankAccount.getAccountNumber());
-        System.out.println("balance: " + this.currentBankAccount.getAccountBalance() + " " + this.currentBankAccount.getAccountCurrency());
+        System.out.println("Account number: " + account.number());
+        System.out.println("balance: " + account.balanceWithCUrrency());
         System.out.println("\n=-=-= Menu -0-0-0\n");
         System.out.println("1. Deposit");
         System.out.println("2. Withdraw");
         System.out.println("3. Transfer");
-        System.out.println("4. Exit");
+        System.out.println("4. History");
+        System.out.println("5. Exit");
 
         String choice = scanner.nextLine();
 
@@ -209,31 +194,39 @@ public class BankConsoleApp {
             case "1" -> depositMenu();
             case "2" -> withdrawMenu();
             case "3" -> transferMenu();
-            case "4" -> {
-                this.currentBankAccount = null;
+            case "4" -> showHistory();
+            case "5" -> {
+                controller.setCurrentBankAccount(null);
                 return;
             }
         }
+    }
+
+    private void showHistory() {
+        List<SingleTransaction> history = controller.getCurrentBankAccount().getHistory();
+        history.forEach(e -> System.out.println(e.toString()));
+        System.out.println("Press anything to exit");
+        scanner.nextLine();
     }
 
     private void depositMenu() {
         System.out.println("\n=-=-= Deposit -0-0-0\n");
         System.out.print("amount: ");
         double amount = Double.parseDouble(scanner.nextLine());
-        currentBankAccount.deposit(amount);
+        controller.deposit(amount);
     }
     private void withdrawMenu() {
-        System.out.println("\n=-=-= Withdraw -0-0-0\n");
+        System.out.println("\n=-=-= Deposit -0-0-0\n");
         System.out.print("amount: ");
         double amount = Double.parseDouble(scanner.nextLine());
-        currentBankAccount.withdraw(amount);
+        controller.withdraw(amount);
     }
     private void transferMenu() {
         System.out.println("\n=-=-= Transfer -0-0-0\n");
         System.out.println("Transfer to(account number): ");
-        AccountNumber transferTo = new AccountNumber(scanner.nextLine());
+        String to = scanner.nextLine();
         System.out.print("amount: ");
         double amount = Double.parseDouble(scanner.nextLine());
-        bankService.transfer(currentBankAccount.getAccountNumber(), transferTo, amount);
+        controller.transfer(to, amount);
     }
 }

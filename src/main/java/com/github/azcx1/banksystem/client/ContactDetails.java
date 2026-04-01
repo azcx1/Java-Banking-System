@@ -4,6 +4,8 @@ import com.github.azcx1.banksystem.common.model.client.Address;
 import com.github.azcx1.banksystem.common.model.client.EmailAddress;
 import com.github.azcx1.banksystem.common.model.client.PhoneNumber;
 
+import java.util.Objects;
+
 public class ContactDetails {
     private Address address;
     private EmailAddress emailAddress;
@@ -16,27 +18,21 @@ public class ContactDetails {
     }
 
     public void setAddress(Address address) {
-        if ( address == null )
-            throw new IllegalArgumentException("Address cannot be null");
-        this.address = address;
+        this.address = Objects.requireNonNull(address, "Address object cannot be null");
     }
     public Address getAddress() {
         return this.address;
     }
 
     public void setEmailAddress(EmailAddress email) {
-        if ( email == null)
-            throw new IllegalArgumentException("Email address cannot be null");
-        this.emailAddress = email;
+        this.emailAddress = Objects.requireNonNull(email, "Email object cannot be null");
     }
     public EmailAddress getEmailAddress() {
         return this.emailAddress;
     }
 
     public void setPhoneNumber(PhoneNumber number) {
-        if ( number == null)
-            throw new IllegalArgumentException("Phone number cannot be null");
-        this.phoneNumber = number;
+        this.phoneNumber = Objects.requireNonNull(number, "Phone number object cannot be null");
     }
     public PhoneNumber getPhoneNumber() {
         return phoneNumber;

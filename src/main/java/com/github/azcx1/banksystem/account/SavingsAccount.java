@@ -1,13 +1,11 @@
 package com.github.azcx1.banksystem.account;
 
 import com.github.azcx1.banksystem.client.Client;
-import com.github.azcx1.banksystem.common.model.account.interfaces.IntrestBearing;
 
 import java.math.BigDecimal;
 import java.util.Currency;
 
-public class SavingsAccount extends BankAccount
-        implements IntrestBearing {
+public class SavingsAccount extends BankAccount {
     private final BigDecimal interestRate;
 
     public SavingsAccount(Client owner, Currency currency, BigDecimal interestRate){
@@ -18,7 +16,6 @@ public class SavingsAccount extends BankAccount
         this.interestRate = interestRate;
     }
 
-    @Override
     public void applyInterest(){
         BigDecimal currentBalance = getAccountBalance();
 

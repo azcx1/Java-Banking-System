@@ -18,13 +18,15 @@ public class Address {
         setBuildingNumber(buildingNumber);
         setFlatNumber(flatNumber);
     }
-    public Address( String city, String street, String postalCode, String buildingNumber ){
+
+    public Address( String city, String street, String postalCode, String buildingNumber ) {
         this(city, street, postalCode, buildingNumber, null);
     }
 
     public void setCity( String city ) {
         if ( city == null || city.isBlank() )
             throw new IllegalArgumentException("City can not be empty");
+
         this.city = city;
     }
     public String getCity() {
@@ -34,6 +36,7 @@ public class Address {
     public void setStreet( String street ) {
         if ( street == null || street.isBlank() )
             throw new IllegalArgumentException("street can not be empty");
+
         this.street = street;
     }
     public String getStreet() {
@@ -43,8 +46,10 @@ public class Address {
     public void setPostalCode( String postalCode ) {
         if ( postalCode == null || postalCode.isBlank() )
             throw new IllegalArgumentException("Postal code can not be empty");
+
         if( !postalCodePattern.matcher(postalCode).matches() )
             throw new IllegalArgumentException("Incorrect postal code format");
+
         this.postalCode = postalCode;
     }
     public String getPostalCode() {
@@ -54,6 +59,7 @@ public class Address {
     public void setBuildingNumber( String number ) {
         if( number == null || number.isBlank() )
             throw new IllegalArgumentException("number can not be empty");
+
         this.buildingNumber = number;
     }
     public String getBuildingNumber() {
@@ -71,6 +77,7 @@ public class Address {
     public String toString() {
         if ( flatNumber == null || flatNumber.isBlank() )
             return String.format("%s(%s), %s %s", getCity(), getPostalCode(), getStreet(), getBuildingNumber());
+
         return String.format("%s(%s), %s %s / %s", getCity(), getPostalCode(), getStreet(), getBuildingNumber(), getFlatNumber());
     }
 }

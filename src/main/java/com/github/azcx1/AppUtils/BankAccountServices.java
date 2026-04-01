@@ -1,5 +1,6 @@
 package com.github.azcx1.AppUtils;
 
+import java.util.Currency;
 import java.util.Scanner;
 
 public class BankAccountServices {
@@ -9,7 +10,7 @@ public class BankAccountServices {
         this.scanner = scanner;
     }
 
-    public String chooseAccountCurrency(){
+    public Currency chooseAccountCurrency(){
         System.out.println("Choose account currency");
         System.out.println("1. PLN");
         System.out.println("2. USD");
@@ -19,9 +20,9 @@ public class BankAccountServices {
         String choice = scanner.nextLine();
 
         return switch (choice){
-            case "1" -> "PLN";
-            case "2" -> "USD";
-            case "3" -> "EUR";
+            case "1" -> Currency.getInstance("PLN");
+            case "2" -> Currency.getInstance("USD");
+            case "3" -> Currency.getInstance("EUR");
             default -> throw new IllegalArgumentException("Incorrect number");
         };
     }

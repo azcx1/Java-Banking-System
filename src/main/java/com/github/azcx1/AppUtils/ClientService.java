@@ -2,7 +2,7 @@ package com.github.azcx1.AppUtils;
 
 import com.github.azcx1.banksystem.client.ContactDetails;
 import com.github.azcx1.banksystem.client.CorporateCustomer;
-import com.github.azcx1.banksystem.client.IndividualCustomer;
+import com.github.azcx1.banksystem.client.IndividualClient;
 import com.github.azcx1.banksystem.common.model.client.*;
 
 import java.util.Scanner;
@@ -13,7 +13,7 @@ public class ClientService {
         this.scanner = scanner;
     }
 
-    public IndividualCustomer createIndividualCustomer(){
+    public IndividualClient createIndividualCustomer(){
         System.out.println("Enter pesel number:");
         Pesel pesel = new Pesel(scanner.nextLine());
 
@@ -26,7 +26,7 @@ public class ClientService {
         ContactDetails contactDetails = collectContactDetails();
 
         return
-                new IndividualCustomer(
+                new IndividualClient(
                         pesel,
                         firstName,
                         lastName,
@@ -45,9 +45,9 @@ public class ClientService {
 
         return
                 new CorporateCustomer(
-                        compamnyName,
                         nip,
                         regon,
+                        compamnyName,
                         contactDetails
                 );
     }
