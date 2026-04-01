@@ -9,11 +9,12 @@ import com.github.azcx1.banksystem.account.BankAccount;
 import com.github.azcx1.banksystem.account.SingleTransaction;
 import com.github.azcx1.banksystem.client.Client;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Scanner;
 
 public class BankConsoleApp {
-    public final Scanner scanner = new Scanner(System.in);
+    private final Scanner scanner = new Scanner(System.in);
 
     BankController controller;
     ClientService clientService;
@@ -52,7 +53,7 @@ public class BankConsoleApp {
         switch (choice) {
             case "1" -> clientSelectionMenu();
             case "2" -> chooseClientType();
-            case "3" -> System.exit(1);
+            case "3" -> System.exit(0);
             default -> System.err.println("Incorrect number");
         }
     }
@@ -180,7 +181,7 @@ public class BankConsoleApp {
         AccountSummaryDTO account = controller.getCurrentAccountSummary();
         System.out.println("\n=-=-= Account -0-0-0\n");
         System.out.println("Account number: " + account.number());
-        System.out.println("balance: " + account.balanceWithCUrrency());
+        System.out.println("balance: " + account.balanceWithCurrency());
         System.out.println("\n=-=-= Menu -0-0-0\n");
         System.out.println("1. Deposit");
         System.out.println("2. Withdraw");
@@ -212,13 +213,13 @@ public class BankConsoleApp {
     private void depositMenu() {
         System.out.println("\n=-=-= Deposit -0-0-0\n");
         System.out.print("amount: ");
-        double amount = Double.parseDouble(scanner.nextLine());
+        BigDecimal amount = new BigDecimal(scanner.nextLine());
         controller.deposit(amount);
     }
     private void withdrawMenu() {
-        System.out.println("\n=-=-= Deposit -0-0-0\n");
+        System.out.println("\n=-=-= Withdraw -0-0-0\n");
         System.out.print("amount: ");
-        double amount = Double.parseDouble(scanner.nextLine());
+        BigDecimal amount = new BigDecimal(scanner.nextLine());
         controller.withdraw(amount);
     }
     private void transferMenu() {

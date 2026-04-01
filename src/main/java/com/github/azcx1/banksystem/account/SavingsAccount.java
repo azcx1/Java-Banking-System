@@ -27,7 +27,7 @@ public class SavingsAccount extends BankAccount {
     @Override
     public void deposit(BigDecimal amount) {
         if (amount.compareTo(BigDecimal.valueOf(5.00)) < 0)
-            throw new IllegalArgumentException(String.format( "Minimum value of deposid is 5.00%s", getAccountCurrency().getSymbol()));
+            throw new IllegalArgumentException(String.format( "Minimum value of deposit is 5.00%s", getAccountCurrency().getSymbol()));
         super.deposit(amount);
     }
     @Override

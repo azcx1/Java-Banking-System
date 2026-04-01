@@ -33,6 +33,7 @@ public class BankService {
                         LocalDateTime.now()
                 )
         );
+        accountRepository.save(account);
     }
 
     public void withdraw(AccountNumber accountNumber, BigDecimal amount) {
@@ -46,6 +47,7 @@ public class BankService {
                         LocalDateTime.now()
                 )
         );
+        accountRepository.save(account);
     }
 
     public void transfer(AccountNumber fromNumber, AccountNumber toNumber, BigDecimal amount) {

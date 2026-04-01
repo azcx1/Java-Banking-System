@@ -35,7 +35,7 @@ public class ClientService {
     }
     public CorporateCustomer createCorporateCustomer(){
         System.out.println("Enter company name:");
-        String compamnyName = scanner.nextLine();
+        String companyName = scanner.nextLine();
         System.out.println("Enter company nip:");
         Nip nip = new Nip( scanner.nextLine() );
         System.out.println("Enter company regon:");
@@ -47,7 +47,7 @@ public class ClientService {
                 new CorporateCustomer(
                         nip,
                         regon,
-                        compamnyName,
+                        companyName,
                         contactDetails
                 );
     }

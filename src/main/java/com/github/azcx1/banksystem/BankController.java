@@ -76,16 +76,16 @@ public class BankController {
         bankService.openSavingsAccount(currentClient, currency);
     }
 
-    public void deposit(double amount) {
+    public void deposit(BigDecimal amount) {
         bankService.deposit(
                 currentBankAccount.getAccountNumber(),
-                BigDecimal.valueOf(amount)
+                amount
         );
     }
-    public void withdraw(double amount) {
+    public void withdraw(BigDecimal amount) {
         bankService.withdraw(
                 currentBankAccount.getAccountNumber(),
-                BigDecimal.valueOf(amount)
+                amount
         );
     }
     public void transfer(String to, double amount) {

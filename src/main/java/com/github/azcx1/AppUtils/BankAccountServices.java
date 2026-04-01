@@ -23,6 +23,7 @@ public class BankAccountServices {
             case "1" -> Currency.getInstance("PLN");
             case "2" -> Currency.getInstance("USD");
             case "3" -> Currency.getInstance("EUR");
+            case "4" -> null;
             default -> throw new IllegalArgumentException("Incorrect number");
         };
     }
